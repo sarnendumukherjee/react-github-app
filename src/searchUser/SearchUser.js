@@ -14,7 +14,8 @@ class SearchUser extends Component {
         this.state = {
           value: '',
           isCardShown: false,
-          searchUserResponse: null
+          searchUserResponse: null,
+          isErrorCardShown: false
         };
     }
 
@@ -38,9 +39,11 @@ class SearchUser extends Component {
             axios.get('https://api.github.com/users/'+this.state.value)
             .then(function(response){
                 ctrl.setState({isCardShown:true});
+                ctrl.setState({isErrorCardShown:false});
                 ctrl.setState({searchUserResponse:response});
             }).catch(function(response){
-                alert("Error");
+                ctrl.setState({isCardShown:false});
+                ctrl.setState({isErrorCardShown:true});
             });
         }
     }
@@ -82,6 +85,13 @@ class SearchUser extends Component {
                     <div>
                         <Well>
                             <UserCard user={this.state.searchUserResponse}></UserCard>
+                        </Well>
+                    </div>
+                </Collapse>
+                <Collapse in={this.state.isErrorCardShown}>
+                    <div>
+                        <Well>
+                            <span>Soory, We could not find any User with the provided username</span>
                         </Well>
                     </div>
                 </Collapse>
